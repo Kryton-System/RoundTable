@@ -82,31 +82,33 @@ class MatchingEngine:
                             )
         return G, user_map
 
-    def find_cycles_bounded_dfs(self, G: nx.MultiDiGraph, user_map: Dict[str, User]) -> List[TradeCycle]:
+    def find_cycles_bounded_dfs(self, G: nx.MultiDiGraph, user_map: Dict[str, User], max_cycles: int = 100) -> List[TradeCycle]:
         """
         Finds all elementary cycles of length between min_cycle_length and max_cycle_length
-        using Bounded-Depth Depth-First Search.
-        Deduplicates rotated representations of the same cycle.
+        using Bounded-Depth Depth-First Search with early pruning and a hard upper cap (max_cycles)
+        to guarantee constant low memory footprint.
         """
         discovered_raw_cycles: Set[Tuple[str, ...]] = set()
-        cycles: List[TradeCycle] = []
-        nodes = list(G.nodes())
+        nodes = sorted(list(G.nodes()))
 
         def dfs(start_node: str, current_node: str, path: List[str], visited: Set[str]):
+            if len(discovered_raw_cycles) >= max_cycles:
+                return
+
             if len(path) > self.max_cycle_length:
                 return
 
             for neighbor in G.successors(current_node):
+                if len(discovered_raw_cycles) >= max_cycles:
+                    return
+
                 if neighbor == start_node and len(path) >= self.min_cycle_length:
                     # Valid cycle found
-                    # Normalize cycle rotation so the minimum node id comes first
                     min_idx = path.index(min(path))
                     normalized_cycle = tuple(path[min_idx:] + path[:min_idx])
                     if normalized_cycle not in discovered_raw_cycles:
                         discovered_raw_cycles.add(normalized_cycle)
                 elif neighbor not in visited and len(path) < self.max_cycle_length:
-                    # Continue search
-                    # Optimization: ensure neighbor >= start_node to avoid scanning permutations
                     if neighbor > start_node:
                         visited.add(neighbor)
                         path.append(neighbor)
@@ -115,7 +117,11 @@ class MatchingEngine:
                         visited.remove(neighbor)
 
         for node in nodes:
+            if len(discovered_raw_cycles) >= max_cycles:
+                break
             dfs(node, node, [node], {node})
+
+        cycles: List[TradeCycle] = []
 
         # Convert raw cycles to TradeCycle objects and score them
         for raw_cycle in discovered_raw_cycles:

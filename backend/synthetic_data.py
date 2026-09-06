@@ -4,20 +4,37 @@ from typing import List, Dict, Any
 from backend.models import User, SkillListing, ListingType, Location, ScheduleWindow
 from backend.graph_engine import MatchingEngine
 
-# Sample realistic skill taxonomies
+# Realistic broad skill taxonomies across diverse domains
 SKILL_TAXONOMY = {
     "Python Programming": "Technology",
     "React Development": "Technology",
     "Machine Learning": "Technology",
+    "Docker & DevOps": "Technology",
+    "Data Structures": "Technology",
+    "PostgreSQL DB": "Technology",
     "Graphic Design": "Creative",
     "UI/UX Design": "Creative",
     "Video Editing": "Creative",
+    "3D Blender Modeling": "Creative",
+    "Digital Illustration": "Creative",
     "Acoustic Guitar": "Music",
+    "Electric Bass": "Music",
     "Vocal Coaching": "Music",
+    "Piano & Keyboards": "Music",
+    "Music Production": "Music",
     "Conversational Spanish": "Languages",
     "Conversational French": "Languages",
+    "Spoken German": "Languages",
+    "Japanese N5 Basics": "Languages",
+    "IELTS Speaking Prep": "Languages",
     "Calculus & Algebra": "Academics",
-    "Digital Photography": "Creative"
+    "Organic Chemistry": "Academics",
+    "Physics Mechanics": "Academics",
+    "Discrete Mathematics": "Academics",
+    "Digital Photography": "Creative",
+    "Content Writing": "Lifestyle",
+    "Chess Strategy": "Lifestyle",
+    "Yoga & Fitness": "Lifestyle"
 }
 
 # Neighborhoods in Dhaka with approximate GPS coords
