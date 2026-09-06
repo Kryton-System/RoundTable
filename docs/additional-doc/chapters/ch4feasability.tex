@@ -1,0 +1,13 @@
+The Round Table Exchange (RTE) solves the multi-party skill barter problem using three main features. Trust ratings, dispute management, and calendar scheduling are left for future work.
+
+\section{Matching Engine}
+
+The main core of The Round Table Exchange (RTE) is a \textbf{graph-based cycle matching engine}. Users and skill posts are stored as a directed graph. The engine runs a Depth-First Search (DFS) algorithm to find closed trade loops of 3 or 4 people. Found loops are scored and ranked based on location proximity and overlapping schedule times. A synthetic data generator is included to test the engine without needing real users.
+
+\section{Simple Application Layer}
+
+A simple web application provides user login, profiles, and skill offer/request listings (with tags, location, and time windows). An API connects the database to the matching engine.
+
+\section{Group Confirmation Workflow}
+
+When the matching engine finds a trade loop, all users in that loop get an in-app notification. An accept/reject workflow tracks responses: the trade is confirmed only if every user accepts before the time limit expires. If anyone rejects or the time expires, the trade proposal is canceled.

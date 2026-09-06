@@ -1,0 +1,42 @@
+\section{Technical Feasibility}
+
+Finding cycles in directed graphs is a well-studied problem. For small loop sizes (up to 4 people), a Depth-First Search (DFS) algorithm works fast and efficiently for up to 1,000 users \cite{johnson1975finding}. Using a synthetic data generator ensures we can test and demonstrate the system easily even without real users.
+
+\begin{table}[h!]
+\caption{Summary of Technical Feasibility}
+\vspace{6pt}
+\centering
+\begin{tabularx}{\textwidth}{|l|X|l|}
+\hline
+\textbf{Risk Area} & \textbf{Solution} & \textbf{Feasibility Level} \\
+\hline
+Algorithm Speed & Bounded DFS algorithm (up to 4 users per loop) & High / Fast \\
+No Real Users Yet & Synthetic data generator creates test users & Fully Solved \\
+Demonstration Risk & Pre-made test data guarantees trade loops for demo & Fully Solved \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Time Feasibility}
+
+The project is planned over 12 weeks. Core engine development (Weeks 3--6) happens alongside web app development (Weeks 5--8), leaving final weeks for testing and report writing.
+
+\section{Resource Feasibility}
+
+All software tools used in this project are free and open-source.
+
+\begin{table}[h!]
+\caption{Resource Stack \& Tools}
+\vspace{6pt}
+\centering
+\begin{tabularx}{\textwidth}{|l|X|l|}
+\hline
+\textbf{Component} & \textbf{Technology Used} & \textbf{Cost} \\
+\hline
+Database & PostgreSQL & Free / Open-Source \\
+Backend & Node.js / FastAPI & Free / Open-Source \\
+Frontend & React.js & Free / Open-Source \\
+Testing \& Graphs & Python (NetworkX, NumPy) & Free / Open-Source \\
+\hline
+\end{tabularx}
+\end{table}

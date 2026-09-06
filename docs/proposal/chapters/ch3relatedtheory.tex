@@ -1,0 +1,51 @@
+\section{Directed Graphs and the Cycle Detection Problem}
+
+A \textbf{directed graph} $G = (V, E)$ consists of a finite set of vertices $V$ and a
+set of directed edges $E \subseteq V \times V$. In the context of The Round Table Exchange (RTE), each vertex
+represents a user and each directed edge $(u, v)$ represents a potential exchange
+relationship: user $u$ offers a skill that user $v$ has requested, and their availability
+windows overlap within an acceptable geographic range.
+
+A \textbf{directed cycle} of length $k$ is a sequence of distinct vertices
+$v_1, v_2, \ldots, v_k$ such that edges $(v_1,v_2), (v_2,v_3), \ldots, (v_{k-1},v_k),
+(v_k, v_1)$ all exist in $E$. Finding all such cycles is the core computational problem
+this project solves.
+
+\section{Bounded-Depth Depth-First Search}
+
+For small maximum cycle lengths (here $k \leq 4$), a \textbf{bounded-depth
+depth-first search (DFS)} is the practical implementation choice. Starting from each
+vertex $v$, the algorithm explores outgoing edges recursively to depth $k$, recording
+any path that returns to $v$ as a discovered cycle. Visited-node tracking prevents
+revisiting within a single path traversal.
+
+Time complexity for exhaustive bounded-DFS over a graph of $n$ nodes and $m$ edges is
+$O(n \cdot m^{k-1})$ in the worst case, which is manageable at the target evaluation
+scale of up to 1,000 nodes. The algorithm is terminated early per path once depth $k$
+is exceeded.
+
+\section{Johnson's Algorithm}
+
+For completeness, \textbf{Johnson's algorithm}~\cite{johnson1975finding} finds all
+elementary circuits in a directed graph in time $O((n + m)(c + 1))$, where $c$ is the
+number of elementary circuits. It is asymptotically superior to exhaustive DFS for dense
+graphs with many cycles, but introduces additional implementation complexity (strongly
+connected component decomposition via Tarjan's or Kosaraju's algorithm, a blocked-vertex
+stack). This project implements bounded-depth DFS as the primary algorithm given the
+constrained maximum cycle length, and notes Johnson's algorithm as a potential upgrade
+path if the cycle-length bound is lifted in future work.
+
+\section{Ranking Discovered Cycles}
+
+Once a set of valid cycles is found, cycles are ranked by a composite score:
+
+\[
+  \mathrm{score}(C) = \alpha \cdot \mathrm{prox}(C) + (1 - \alpha) \cdot \mathrm{overlap}(C)
+\]
+
+where $\mathrm{prox}(C)$ is the normalised mean geographic proximity of participants in
+cycle $C$, $\mathrm{overlap}(C)$ is the proportion of shared availability time across all
+participants, and $\alpha \in [0,1]$ is a tunable weighting parameter. This two-signal
+formula is deliberately minimal: trust weighting and preference scoring are deferred to
+future work.
+

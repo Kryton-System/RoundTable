@@ -1,0 +1,15 @@
+\section{The Skill Barter Landscape}
+
+Skill bartering --- exchanging services directly without money --- has existed for a long time. Digital platforms today usually follow two main patterns:
+
+\textbf{Direct 1-to-1 swap platforms} (e.g., Reciproc8, Ying, BarterQuest, The Barter Shop) require both users to want what the other person offers at the exact same time. This limits viable matches. For example, if Alice teaches Python and wants guitar lessons, she can only trade with someone who teaches guitar and wants Python. These platforms do not find multi-person trade chains.
+
+\textbf{Time-credit currency platforms} (e.g., TimeRepublik, hOurworld) solve the matching problem by giving users time credits (1 hour of service = 1 credit). This turns bartering into a virtual credit system rather than a direct exchange.
+
+\section{Prior Art: Kidney Paired Donation Matching}
+
+Finding multi-person exchange loops in a graph is well known in medical kidney exchange programs \cite{roth2004kidney, ashlagi2013kidney}. In kidney exchanges, incompatible donor-patient pairs are matched into exchange loops (Donor A gives to Patient B, Donor B gives to Patient C, and Donor C gives to Patient A). The Round Table Exchange (RTE) applies this same graph-matching idea to skill bartering.
+
+\section{The Problem Gap}
+
+Current skill barter platforms do not find multi-person trade loops automatically. Users on 1-to-1 platforms must search manually, while users on time-credit platforms give up direct barter. The Round Table Exchange (RTE) fills this gap by finding multi-person trade loops automatically while keeping direct barter semantics.

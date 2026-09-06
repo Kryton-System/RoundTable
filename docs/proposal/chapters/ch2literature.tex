@@ -1,0 +1,27 @@
+\section{Project Context \& Platform Types}
+
+Existing skill exchange platforms usually work in one of two ways:
+\begin{enumerate}
+    \item \textbf{Direct 1-to-1 Trade Apps (e.g., Reciproc8, Ying, BarterQuest, The Barter Shop):} Require two people to want exactly what the other has at the same time.
+    \item \textbf{Time Bank Apps (e.g., TimeRepublik, hOurworld):} Use time credits as virtual money, so matching is not needed.
+\end{enumerate}
+
+The Round Table Exchange (RTE) fills the gap by finding multi-person trade loops automatically, inspired by kidney donation matching algorithms \cite{abraham2007clearing, roth2004kidney} and multi-party trade research \cite{bartermultiway2010, patent2008}.
+
+\section{In-Scope Features}
+
+\begin{itemize}
+    \item \textbf{Matching Engine:} Directed graph search algorithm that finds trade loops up to 4 people and ranks them by location and schedule overlap.
+    \item \textbf{Basic Web App:} Simple user login, profiles, and skill offer/request listings with location coordinates.
+    \item \textbf{Trade Confirmation Workflow:} Multi-user accept/reject system with proposal time limits.
+    \item \textbf{Test Data Generator:} Configurable tool to generate fake user data for testing.
+\end{itemize}
+
+\section{Out-of-Scope Features}
+
+\begin{itemize}
+    \item User reputation and review scores.
+    \item Dispute resolution mechanisms.
+    \item Real-time push notifications and calendar sync.
+    \item Dedicated graph database software (e.g., Neo4j).
+\end{itemize}

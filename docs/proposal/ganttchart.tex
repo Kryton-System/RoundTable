@@ -1,0 +1,56 @@
+\section{Project Timeline (12 Weeks)}
+
+The project timeline spans 12 weeks across the academic semester. The work packages are consolidated into 8 key high-level task groups:
+
+\begin{center}
+\begin{ganttchart}[
+    hgrid,
+    vgrid,
+    x unit=0.72cm,
+    y unit title=0.6cm,
+    y unit chart=0.6cm,
+    title height=1,
+    bar height=0.5,
+    title label font=\footnotesize\bfseries,
+    bar label font=\footnotesize,
+    group label font=\footnotesize\bfseries,
+    bar/.append style={fill=blue!50, draw=blue!70},
+    group/.append style={fill=gray!60, draw=black}
+]{1}{12}
+
+  \gantttitle{Project Schedule (12 Weeks)}{12} \\
+  \gantttitlelist{1,...,12}{1} \\
+
+  \ganttbar{1. Project Mgmt.}{1}{12} \\
+  \ganttbar{2. Req. \& Architecture}{1}{2} \\
+  \ganttbar{3. Graph Construction}{3}{4} \\
+  \ganttbar{4. Cycle Matcher Engine}{3}{6} \\
+  \ganttbar{5. Application Layer}{5}{8} \\
+  \ganttbar{6. Confirmation Workflow}{8}{9} \\
+  \ganttbar{7. Benchmarking}{9}{10} \\
+  \ganttbar{8. Final Report \& Demo}{10}{12}
+
+\end{ganttchart}
+\end{center}
+
+\vspace{12pt}
+
+\begin{table}[h!]
+\caption{Task Schedule Summary (8 Tasks across 12 Weeks)}
+\vspace{6pt}
+\centering
+\begin{tabularx}{\textwidth}{|c|X|c|c|}
+\hline
+\textbf{Task \#} & \textbf{Task Description} & \textbf{Start Week} & \textbf{End Week} \\
+\hline
+1 & Project Management \& Documentation & Week 1 & Week 12 \\
+2 & Requirements Analysis \& Architecture & Week 1 & Week 2 \\
+3 & Data Schema \& Graph Construction Module & Week 3 & Week 4 \\
+4 & Cycle Detection Algorithm \& Ranking Engine & Week 3 & Week 6 \\
+5 & Application Layer \& REST API Development & Week 5 & Week 8 \\
+6 & Confirmation Workflow State Machine & Week 8 & Week 9 \\
+7 & System Benchmarking \& Complexity Analysis & Week 9 & Week 10 \\
+8 & Final Report Writing \& Demonstration Prep & Week 10 & Week 12 \\
+\hline
+\end{tabularx}
+\end{table}

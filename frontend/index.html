@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Round Table Exchange (RTE) | Multi-Party Skill Barter Network</title>
+  <meta name="description" content="Graph-based cycle matching prototype for multi-party skill bartering loops (3-party and 4-party trades).">
+  
+  <!-- Vis.js Network for interactive graph visualization -->
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand-wrapper">
+      <div class="brand-icon">🔄</div>
+      <div>
+        <h1 class="brand-title">The Round Table Exchange (RTE)</h1>
+        <div class="brand-subtitle">Graph-Based Multi-Party Skill Barter Network • UITS CSE</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="tab-explorer">
+        <span>🌐</span> Network & Cycle Explorer
+      </button>
+      <button class="tab-btn" data-tab="tab-proposals">
+        <span>🤝</span> Trade Confirmations
+      </button>
+      <button class="tab-btn" data-tab="tab-users">
+        <span>👥</span> User Profiles
+      </button>
+      <button class="tab-btn" data-tab="tab-benchmarks">
+        <span>⚡</span> Scalability Benchmarks
+      </button>
+    </nav>
+
+    <div class="header-badges">
+      <div class="badge">
+        <span class="badge-pulse"></span>
+        <span>Bounded DFS Engine Active</span>
+      </div>
+      <button id="btn-reset-demo" class="btn btn-secondary btn-sm" title="Reset back to standard demo dataset">
+        🔄 Reset Demo
+      </button>
+    </div>
+  </header>
+
+  <!-- Metrics Strip -->
+  <section class="metrics-strip" aria-label="System Metrics">
+    <div class="metric-card">
+      <div class="metric-label">Total Users</div>
+      <div class="metric-value" id="metric-total-users">0</div>
+      <div class="metric-detail">Active participants</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Discovered Cycles</div>
+      <div class="metric-value" id="metric-total-cycles" style="color: var(--accent-cyan);">0</div>
+      <div class="metric-detail">Closed barter loops</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">3-Party Loops (k=3)</div>
+      <div class="metric-value" id="metric-k3-cycles" style="color: var(--accent-primary);">0</div>
+      <div class="metric-detail">Triangular trades</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">4-Party Loops (k=4)</div>
+      <div class="metric-value" id="metric-k4-cycles" style="color: var(--accent-purple);">0</div>
+      <div class="metric-detail">Quad trades</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Active Proposals</div>
+      <div class="metric-value" id="metric-active-proposals" style="color: var(--accent-emerald);">0</div>
+      <div class="metric-detail">Pending group decisions</div>
+    </div>
+  </section>
+
+  <!-- Main Workspaces -->
+  <main class="app-main">
+
+    <!-- TAB 1: Network & Cycle Explorer -->
+    <div id="tab-explorer" class="tab-content active">
+      <div class="explorer-grid">
+        
+        <!-- Left Panel: Algorithm Controls -->
+        <aside class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>⚙️</span> Algorithm Controls
+            </div>
+          </div>
+          <div class="panel-body">
+            
+            <div class="control-group">
+              <div class="control-label">
+                <span>Ranking Weight ($\alpha$)</span>
+                <span id="alpha-val" style="color: var(--accent-cyan); font-family: var(--font-mono);">0.50</span>
+              </div>
+              <input type="range" id="alpha-slider" class="range-slider" min="0" max="1" step="0.05" value="0.5">
+              <div class="slider-scale">
+                <span>0.0 (Schedule Only)</span>
+                <span>1.0 (Location Only)</span>
+              </div>
+            </div>
+
+            <div class="control-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <div>
+                <label class="control-label">Min Loop (k)</label>
+                <select id="min-k-select" class="form-select">
+                  <option value="3" selected>3 People</option>
+                  <option value="2">2 People (1:1)</option>
+                </select>
+              </div>
+              <div>
+                <label class="control-label">Max Loop (k)</label>
+                <select id="max-k-select" class="form-select">
+                  <option value="4" selected>4 People</option>
+                  <option value="3">3 People</option>
+                </select>
+              </div>
+            </div>
+
+            <button id="btn-run-match" class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;">
+              🚀 Run Cycle Matching Engine
+            </button>
+
+            <hr style="border: none; border-top: 1px solid var(--border-glass); margin: 16px 0;">
+
+            <div class="control-group">
+              <div class="control-label">
+                <span>Synthetic Quick-Inject</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+                <button class="btn btn-secondary btn-sm btn-gen-synth" data-count="20">+20 Users</button>
+                <button class="btn btn-secondary btn-sm btn-gen-synth" data-count="50">+50 Users</button>
+              </div>
+            </div>
+
+            <button id="btn-open-user-modal" class="btn btn-accent btn-sm" style="width: 100%; margin-top: 10px;">
+              ➕ Add Custom User Profile
+            </button>
+
+          </div>
+        </aside>
+
+        <!-- Center: Interactive Graph Canvas -->
+        <section class="graph-container" aria-label="Interactive Graph Canvas">
+          <div id="network-canvas"></div>
+
+          <div class="graph-overlay-controls">
+            <button id="btn-fit-graph" class="btn btn-secondary btn-sm">🎯 Center View</button>
+            <button id="btn-reset-graph" class="btn btn-secondary btn-sm">✨ Reset Highlights</button>
+          </div>
+
+          <div class="graph-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: var(--accent-primary);"></div>
+              <span>User Node</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: rgba(99, 102, 241, 0.5);"></div>
+              <span>Skill Request / Offer Edge</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background: var(--accent-emerald);"></div>
+              <span>Active Cycle Highlight</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Panel: Discovered Cycles -->
+        <aside class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>🔁</span> Discovered Trade Loops
+            </div>
+            <span id="cycles-count-badge" class="badge" style="color: var(--accent-cyan); border-color: rgba(6,182,212,0.3);">
+              0 Found
+            </span>
+          </div>
+          <div class="panel-body" id="cycles-list">
+            <!-- Discovered cycles dynamically injected here -->
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: Group Confirmation Workflow Console -->
+    <div id="tab-proposals" class="tab-content">
+      <div class="panel-card" style="max-width: 900px; margin: 0 auto; width: 100%;">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🤝</span> Multi-Party Trade Confirmation State Machine
+          </div>
+        </div>
+        <div class="panel-body">
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">
+            When a multi-party barter loop is identified, all participants enter a synchronized proposal. 
+            The trade is <strong>atomically confirmed</strong> only when all users accept. If any user rejects, the loop is canceled.
+          </p>
+          <div id="proposals-list">
+            <!-- Active and past proposals dynamically injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: User Directory & Listings -->
+    <div id="tab-users" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h2 style="font-size: 1.1rem;">Registered Users & Skill Listings</h2>
+        <button class="btn btn-accent btn-sm" onclick="openCreateUserModal()">➕ Add New User Profile</button>
+      </div>
+      <div class="user-grid" id="users-cards-grid">
+        <!-- User cards dynamically injected here -->
+      </div>
+    </div>
+
+    <!-- TAB 4: Scalability Benchmarks -->
+    <div id="tab-benchmarks" class="tab-content">
+      <div class="panel-card" style="max-width: 1000px; margin: 0 auto; width: 100%;">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>⚡</span> Empirical Scalability & Complexity Benchmarks ($O(n \cdot m^{k-1})$)
+          </div>
+        </div>
+        <div class="panel-body">
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+            Evaluates the bounded-depth DFS matching engine and graph construction speed across synthetic user populations of varying density in the Dhaka metropolitan area.
+          </p>
+          <button id="btn-run-benchmark" class="btn btn-primary" style="max-width: 380px;">
+            ▶ Run Scalability Benchmark (20 - 500 Nodes)
+          </button>
+
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Graph Size</th>
+                <th>Edge Density</th>
+                <th>Graph Build Time</th>
+                <th>Cycle Detection (DFS)</th>
+                <th>Total Latency</th>
+                <th>Loops Discovered</th>
+              </tr>
+            </thead>
+            <tbody id="benchmark-tbody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 30px;">
+                  Click above to run live empirical benchmark suite.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Create User Modal -->
+  <div id="modal-create-user" class="modal-backdrop">
+    <div class="modal-content">
+      <h3 style="font-size: 1.1rem; margin-bottom: 14px;">➕ Register User & Skill Listing</h3>
+      <form id="form-create-user">
+        
+        <div class="control-group">
+          <label class="control-label">Full Name</label>
+          <input type="text" id="user-name-input" class="form-input" placeholder="e.g. Mahir Shahriar" required>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Location (Dhaka Area)</label>
+          <select id="user-city-select" class="form-select"></select>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Skill Offered (I can teach)</label>
+          <input type="text" id="user-offer-skill" class="form-input" placeholder="e.g. Python Programming, Video Editing" required>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Skill Wanted (I want to learn)</label>
+          <input type="text" id="user-want-skill" class="form-input" placeholder="e.g. Acoustic Guitar, Conversational Spanish" required>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="button" id="btn-close-modal" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Profile</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script src="js/graph_viz.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

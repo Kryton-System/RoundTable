@@ -1,0 +1,13 @@
+\contentsline {chapter}{Executive Summary}{1}{chapter*.2}%
+\contentsline {chapter}{Project Background}{2}{chapter*.3}%
+\contentsline {section}{\numberline {0.1}The Skill Barter Landscape}{2}{section.0.1}%
+\contentsline {section}{\numberline {0.2}Prior Art: Kidney Paired Donation Matching}{2}{section.0.2}%
+\contentsline {section}{\numberline {0.3}The Problem Gap}{2}{section.0.3}%
+\contentsline {chapter}{Problem Statement}{3}{chapter*.4}%
+\contentsline {chapter}{Solution}{4}{chapter*.5}%
+\contentsline {section}{\numberline {0.4}Matching Engine}{4}{section.0.4}%
+\contentsline {section}{\numberline {0.5}Simple Application Layer}{4}{section.0.5}%
+\contentsline {section}{\numberline {0.6}Group Confirmation Workflow}{4}{section.0.6}%
+\contentsline {chapter}{Formation Team}{5}{chapter*.6}%
+\contentsline {chapter}{References}{5}{chapter*.6}%
+\contentsfinish 

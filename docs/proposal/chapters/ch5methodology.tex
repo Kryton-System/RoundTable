@@ -1,0 +1,76 @@
+\section{Detailed Work Breakdown Structure}
+
+The Round Table Exchange (RTE) project is structured into seven primary Work Packages (WP), further broken down into detailed sub-tasks and implementation deliverables:
+
+\begin{enumerate}
+    \item \textbf{WP 1.0: Project Management \& Governance}
+    \begin{enumerate}
+        \item \textit{1.1 Proposal Formulation:} Requirements gathering, scope definition, and formal proposal drafting.
+        \item \textit{1.2 Milestone \& Sprint Tracking:} Bi-weekly progress reviews, task allocation, and risk management.
+        \item \textit{1.3 Documentation \& Final Reporting:} Technical report compilation, revision control, and presentation prep.
+    \end{enumerate}
+
+    \item \textbf{WP 2.0: Requirements \& Architectural Design}
+    \begin{enumerate}
+        \item \textit{2.1 Stakeholder \& Use-Case Analysis:} Defining user personas, offerer/requester flows, and admin management.
+        \item \textit{2.2 Relational Data Modeling:} Schema design for Users, Profiles, Skill Tags, Offers, Wants, and Adjacency graphs in PostgreSQL.
+        \item \textit{2.3 Module Interface Specification:} Defining REST/JSON contracts separating the matching engine from backend services.
+    \end{enumerate}
+
+    \item \textbf{WP 3.0: Core Matching Engine Development (Core Contribution)}
+    \begin{enumerate}
+        \item \textit{3.1 Graph Construction Service:} Converting active database listings into directed adjacency graphs.
+        \item \textit{3.2 Bounded-Depth DFS Cycle Finder:} Implementing path search algorithms for closed loops up to length $k=4$.
+        \item \textit{3.3 Multi-Signal Ranking Engine:} Scoring cycles using Haversine geographic proximity and time-window overlap.
+        \item \textit{3.4 Synthetic Data Generator:} Building a configurable dataset generator (tunable node count, edge density, skill distribution).
+        \item \textit{3.5 Graph Engine Unit Testing Suite:} Unit test cases covering zero-cycle, single 3-cycle, and complex overlapping cycle graphs.
+    \end{enumerate}
+
+    \item \textbf{WP 4.0: Application Layer \& API Services}
+    \begin{enumerate}
+        \item \textit{4.1 Authentication \& Profile CRUD:} User registration, JWT-based auth, and profile management.
+        \item \textit{4.2 Listing Management Module:} Creating, editing, and disabling skill offer/want posts with tags and location coords.
+        \item \textit{4.3 RESTful API Gateway:} Middleware endpoints connecting web client requests to the graph matching service.
+    \end{enumerate}
+
+    \item \textbf{WP 5.0: Group Confirmation Workflow Engine}
+    \begin{enumerate}
+        \item \textit{5.1 Proposal Dispatcher:} Pushing trade proposal alerts to all matched cycle participants.
+        \item \textit{5.2 Accept/Reject State Machine:} State machine tracking individual responses (Pending, Accepted, Rejected, Expired).
+        \item \textit{5.3 Timeout \& Expiration Handler:} Automated cron/background worker canceling proposals if unconfirmed within window.
+        \item \textit{5.4 Re-trigger Matcher Service (Stretch Goal):} Re-evaluating graph matches upon partial rejection.
+    \end{enumerate}
+
+    \item \textbf{WP 6.0: System Benchmarking \& Evaluation}
+    \begin{enumerate}
+        \item \textit{6.1 Scalability Experiments:} Measuring match rate vs. user density across graph sizes (50 to 1,000 nodes).
+        \item \textit{6.2 Runtime Complexity Analysis:} Empirical validation of $O(n \cdot m^{k-1})$ time complexity bounds.
+    \end{enumerate}
+
+    \item \textbf{WP 7.0: Documentation \& Deployment}
+    \begin{enumerate}
+        \item \textit{7.1 Literature \& Mechanism Review:} Finalizing prior-art comparison writeup.
+        \item \textit{7.2 System Integration \& Demo Prep:} End-to-end testing, demo script creation, and final report submission.
+    \end{enumerate}
+\end{enumerate}
+
+\section{Team Role Allocation}
+
+Work package ownership and technical responsibilities are structured as follows:
+
+\begin{itemize}
+    \item \textbf{Ahmmad Abdali Khan (ID: 0432320005101118):}
+    Lead Software Engineer. Manages core graph matching algorithm engineering, bounded-depth DFS cycle discovery engine, multi-signal ranking function, PostgreSQL database schema design, RESTful backend API gateway, and empirical runtime complexity analysis (WBS 3.1, 3.2, 3.3, 4.3, and 6.2).
+
+    \item \textbf{Sumaia Bintey Ismail (ID: 0432320005101103):}
+    Application \& Systems Engineer. Manages frontend web application UI/UX, user profile CRUD workflows, skill listing management module, synthetic data generator module, group confirmation workflow state machine, use-case specifications, and final technical documentation (WBS 1.0, 2.0, 3.4, 3.5, 4.1, 4.2, 5.0, 6.1, and 7.0).
+\end{itemize}
+
+\vspace{12pt}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{images/wbs_diagram.png}
+\caption{Professional Work Breakdown Structure (WBS) Infographic Diagram of CycleTrade}
+\label{fig:wbs-tree}
+\end{figure}
