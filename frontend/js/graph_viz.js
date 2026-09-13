@@ -1,6 +1,9 @@
 /**
  * Graph Visualization Module using Vis-Network
- * Handles rendering the interactive barter graph and highlighting multi-party trade cycles.
+ * Tuned for:
+ * 1. Buttery 60fps performance (zero lag even with 100+ nodes)
+ * 2. Slow-motion, living organic floating drift
+ * 3. Silky smooth nodes, continuous curved edges, and tactile interaction
  */
 
 class GraphVisualizer {
@@ -12,6 +15,7 @@ class GraphVisualizer {
     this.rawNodes = [];
     this.rawEdges = [];
     this.activeHighlight = null;
+    this.popColors = ['#FFE600', '#00F5D4', '#D7B9FF', '#FF6B8B', '#00BBF9', '#FF9E00'];
     this.init();
   }
 
@@ -26,60 +30,73 @@ class GraphVisualizer {
         shape: 'dot',
         size: 20,
         font: {
-          face: 'Plus Jakarta Sans',
+          face: 'Space Grotesk',
           size: 12,
-          color: '#F8FAFC',
-          strokeWidth: 2,
-          strokeColor: '#090D16'
+          color: '#121212',
+          strokeWidth: 3,
+          strokeColor: '#FFFFFF',
+          bold: true
         },
-        borderWidth: 2,
-        shadow: {
-          enabled: true,
-          color: 'rgba(0,0,0,0.5)',
-          size: 8,
-          x: 0,
-          y: 4
-        }
+        borderWidth: 2.5,
+        borderWidthSelected: 3.5,
+        shadow: false // Disabled canvas shadow for buttery 60fps rendering
       },
       edges: {
         width: 1.8,
         color: {
-          color: 'rgba(99, 102, 241, 0.4)',
-          highlight: '#06B6D4',
-          hover: '#38BDF8'
+          color: 'rgba(18, 18, 18, 0.45)',
+          highlight: '#FF0055',
+          hover: '#00F5D4'
         },
         arrows: {
-          to: { enabled: true, scaleFactor: 0.7 }
+          to: { enabled: true, scaleFactor: 0.75 }
         },
         smooth: {
-          type: 'curvedCW',
+          enabled: true,
+          type: 'continuous',
           roundness: 0.15
         },
         font: {
-          face: 'Plus Jakarta Sans',
+          face: 'JetBrains Mono',
           size: 10,
-          color: '#94A3B8',
-          background: 'rgba(9, 13, 22, 0.85)',
-          strokeWidth: 0,
+          color: '#121212',
+          background: 'rgba(255, 253, 245, 0.95)',
+          strokeWidth: 1,
+          strokeColor: '#121212',
           align: 'middle'
-        }
+        },
+        shadow: false
       },
       physics: {
+        enabled: true,
         solver: 'forceAtlas2Based',
         forceAtlas2Based: {
-          gravitationalConstant: -45,
-          centralGravity: 0.015,
-          springLength: 110,
-          springConstant: 0.08,
-          damping: 0.4
+          gravitationalConstant: -26,
+          centralGravity: 0.006,
+          springLength: 125,
+          springConstant: 0.035,
+          damping: 0.86,        // High damping: produces a slow, silky, graceful liquid float without jitter
+          avoidOverlap: 0.75
         },
-        stabilization: { iterations: 120 }
+        maxVelocity: 8,         // Caps velocity: prevents nodes from jerking or snapping rapidly
+        minVelocity: 0.04,      // Very low threshold: keeps the slow organic drift alive
+        timestep: 0.35,         // Fine time step for ultra-smooth simulation
+        stabilization: {
+          enabled: true,
+          iterations: 80,
+          updateInterval: 25
+        }
       },
       interaction: {
         hover: true,
-        tooltipDelay: 150,
+        hoverConnectedEdges: true,
+        selectConnectedEdges: true,
+        tooltipDelay: 80,
         zoomView: true,
-        dragView: true
+        dragView: true,
+        dragNodes: true,
+        hideEdgesOnDrag: false,
+        navigationButtons: false
       }
     };
 
@@ -91,17 +108,22 @@ class GraphVisualizer {
     this.rawEdges = edgesData;
     this.activeHighlight = null;
 
-    const formattedNodes = nodesData.map(n => {
+    const showAllEdgeLabels = edgesData.length <= 15;
+
+    const formattedNodes = nodesData.map((n, idx) => {
       const offersText = n.offers.length ? `\nOffers: ${n.offers.join(', ')}` : '';
       const wantsText = n.wants.length ? `\nWants: ${n.wants.join(', ')}` : '';
+      const popBg = n.color || this.popColors[idx % this.popColors.length];
+
       return {
         id: n.id,
         label: n.label,
         title: `<b>${n.label}</b> (${n.city})${offersText}${wantsText}`,
         color: {
-          background: n.color || '#4F46E5',
-          border: '#FFFFFF',
-          highlight: { background: '#06B6D4', border: '#FFFFFF' }
+          background: popBg,
+          border: '#121212',
+          highlight: { background: '#00F5D4', border: '#121212' },
+          hover: { background: '#FFE600', border: '#121212' }
         },
         opacity: 1.0
       };
@@ -111,12 +133,13 @@ class GraphVisualizer {
       id: `edge-${idx}`,
       from: e.from,
       to: e.to,
-      label: e.label,
+      // In dense graphs, omit default text label to prevent visual collision & preserve 60fps; tooltip handles details!
+      label: showAllEdgeLabels ? e.label : undefined,
       title: `${e.from} teaches ${e.label} to ${e.to}`,
-      color: { color: 'rgba(99, 102, 241, 0.45)' },
+      color: { color: 'rgba(18, 18, 18, 0.4)' },
       width: 1.8,
-      opacity: 1.0,
-      font: { color: '#94A3B8' }
+      opacity: 0.9,
+      font: { color: '#121212' }
     }));
 
     this.nodesDataSet.clear();
@@ -131,41 +154,49 @@ class GraphVisualizer {
     this.activeHighlight = { userIds: cycleUserIds, edges: cycleEdges };
     const cycleSet = new Set(cycleUserIds);
 
-    // Update nodes: dim outsiders, glow participants
+    // Update nodes: dim outsiders gracefully, smoothly enlarge cycle participants
     const updatedNodes = this.rawNodes.map(n => {
       const inCycle = cycleSet.has(n.id);
       return {
         id: n.id,
-        opacity: inCycle ? 1.0 : 0.15,
-        size: inCycle ? 26 : 16,
+        opacity: inCycle ? 1.0 : 0.18,
+        size: inCycle ? 28 : 15,
         color: {
-          background: inCycle ? '#06B6D4' : '#334155',
-          border: inCycle ? '#FFFFFF' : '#475569'
+          background: inCycle ? '#00F5D4' : '#EAE6DB',
+          border: inCycle ? '#121212' : '#999999',
+          highlight: { background: '#00F5D4', border: '#121212' }
         },
         font: {
-          color: inCycle ? '#FFFFFF' : 'rgba(148, 163, 184, 0.3)',
-          size: inCycle ? 14 : 10
+          color: inCycle ? '#121212' : 'rgba(18, 18, 18, 0.25)',
+          size: inCycle ? 14 : 10,
+          bold: inCycle
         }
       };
     });
 
-    // Update edges: highlight exact cycle steps in emerald/cyan, dim others
+    // Update edges: illuminate cycle path with hot coral/pink and explicit skill labels
     const updatedEdges = this.rawEdges.map((e, idx) => {
-      // Check if this directed edge is part of the cycle sequence
-      const isCycleEdge = cycleEdges.some(
+      const cycleEdgeMatch = cycleEdges.find(
         ce => ce.from_user_id === e.from && ce.to_user_id === e.to && ce.skill_name.toLowerCase() === e.label.toLowerCase()
       );
+      const isCycleEdge = !!cycleEdgeMatch;
 
       return {
         id: `edge-${idx}`,
         color: {
-          color: isCycleEdge ? '#10B981' : 'rgba(255, 255, 255, 0.04)'
+          color: isCycleEdge ? '#FF0055' : 'rgba(18, 18, 18, 0.06)'
         },
-        width: isCycleEdge ? 3.5 : 0.8,
+        width: isCycleEdge ? 4.0 : 0.8,
         opacity: isCycleEdge ? 1.0 : 0.1,
+        // Always display the skill label for the illuminated cycle steps
+        label: isCycleEdge ? e.label : undefined,
         font: {
-          color: isCycleEdge ? '#34D399' : 'rgba(148, 163, 184, 0.1)',
-          size: isCycleEdge ? 11 : 8
+          color: '#121212',
+          size: 11,
+          bold: true,
+          background: '#FFE600',
+          strokeWidth: 1.5,
+          strokeColor: '#121212'
         }
       };
     });
@@ -182,7 +213,7 @@ class GraphVisualizer {
 
   fit() {
     if (this.network) {
-      this.network.fit({ animation: { duration: 500 } });
+      this.network.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } });
     }
   }
 }

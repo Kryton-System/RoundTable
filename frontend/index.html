@@ -6,6 +6,10 @@
   <title>The Round Table Exchange (RTE) | Multi-Party Skill Barter Network</title>
   <meta name="description" content="Graph-based cycle matching prototype for multi-party skill bartering loops (3-party and 4-party trades).">
   
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- Vis.js Network for interactive graph visualization -->
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
   
@@ -18,7 +22,10 @@
     <div class="brand-wrapper">
       <div class="brand-icon">🔄</div>
       <div>
-        <h1 class="brand-title">The Round Table Exchange (RTE)</h1>
+        <h1 class="brand-title">
+          The Round Table Exchange
+          <span class="badge" style="background: var(--pop-coral); transform: rotate(2.5deg); font-size: 0.65rem; padding: 2px 8px;">k ∈ [3, 4] LOOPS</span>
+        </h1>
         <div class="brand-subtitle">Graph-Based Multi-Party Skill Barter Network • UITS CSE</div>
       </div>
     </div>
@@ -53,29 +60,29 @@
   <!-- Metrics Strip -->
   <section class="metrics-strip" aria-label="System Metrics">
     <div class="metric-card">
-      <div class="metric-label">Total Users</div>
+      <div class="metric-label">👥 Total Users</div>
       <div class="metric-value" id="metric-total-users">0</div>
-      <div class="metric-detail">Active participants</div>
+      <div class="metric-detail">Active barter participants</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">Discovered Cycles</div>
-      <div class="metric-value" id="metric-total-cycles" style="color: var(--accent-cyan);">0</div>
-      <div class="metric-detail">Closed barter loops</div>
+      <div class="metric-label">🔁 Discovered Cycles</div>
+      <div class="metric-value" id="metric-total-cycles">0</div>
+      <div class="metric-detail">Closed multi-party barter loops</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">3-Party Loops (k=3)</div>
-      <div class="metric-value" id="metric-k3-cycles" style="color: var(--accent-primary);">0</div>
-      <div class="metric-detail">Triangular trades</div>
+      <div class="metric-label">📐 3-Party Loops (k=3)</div>
+      <div class="metric-value" id="metric-k3-cycles">0</div>
+      <div class="metric-detail">Triangular barter trades</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">4-Party Loops (k=4)</div>
-      <div class="metric-value" id="metric-k4-cycles" style="color: var(--accent-purple);">0</div>
-      <div class="metric-detail">Quad trades</div>
+      <div class="metric-label">🔷 4-Party Loops (k=4)</div>
+      <div class="metric-value" id="metric-k4-cycles">0</div>
+      <div class="metric-detail">Quad barter trades</div>
     </div>
     <div class="metric-card">
-      <div class="metric-label">Active Proposals</div>
-      <div class="metric-value" id="metric-active-proposals" style="color: var(--accent-emerald);">0</div>
-      <div class="metric-detail">Pending group decisions</div>
+      <div class="metric-label">🤝 Active Proposals</div>
+      <div class="metric-value" id="metric-active-proposals">0</div>
+      <div class="metric-detail">Synchronized group decisions</div>
     </div>
   </section>
 
@@ -98,7 +105,7 @@
             <div class="control-group">
               <div class="control-label">
                 <span>Ranking Weight ($\alpha$)</span>
-                <span id="alpha-val" style="color: var(--accent-cyan); font-family: var(--font-mono);">0.50</span>
+                <span id="alpha-val" class="badge" style="padding: 2px 8px; font-size: 0.78rem; background: var(--pop-canary);">0.50</span>
               </div>
               <input type="range" id="alpha-slider" class="range-slider" min="0" max="1" step="0.05" value="0.5">
               <div class="slider-scale">
@@ -124,23 +131,23 @@
               </div>
             </div>
 
-            <button id="btn-run-match" class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;">
+            <button id="btn-run-match" class="btn btn-primary" style="margin-top: 10px; margin-bottom: 16px;">
               🚀 Run Cycle Matching Engine
             </button>
 
-            <hr style="border: none; border-top: 1px solid var(--border-glass); margin: 16px 0;">
+            <hr style="border: none; border-top: var(--border-thin); margin: 16px 0;">
 
             <div class="control-group">
               <div class="control-label">
                 <span>Synthetic Quick-Inject</span>
               </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
                 <button class="btn btn-secondary btn-sm btn-gen-synth" data-count="20">+20 Users</button>
                 <button class="btn btn-secondary btn-sm btn-gen-synth" data-count="50">+50 Users</button>
               </div>
             </div>
 
-            <button id="btn-open-user-modal" class="btn btn-accent btn-sm" style="width: 100%; margin-top: 10px;">
+            <button id="btn-open-user-modal" class="btn btn-accent btn-sm" style="width: 100%; margin-top: 8px;">
               ➕ Add Custom User Profile
             </button>
 
@@ -158,15 +165,15 @@
 
           <div class="graph-legend">
             <div class="legend-item">
-              <div class="legend-dot" style="background: var(--accent-primary);"></div>
+              <div class="legend-dot" style="background: var(--pop-canary);"></div>
               <span>User Node</span>
             </div>
             <div class="legend-item">
-              <div class="legend-dot" style="background: rgba(99, 102, 241, 0.5);"></div>
+              <div class="legend-dot" style="background: #121212;"></div>
               <span>Skill Request / Offer Edge</span>
             </div>
             <div class="legend-item">
-              <div class="legend-dot" style="background: var(--accent-emerald);"></div>
+              <div class="legend-dot" style="background: var(--pop-coral);"></div>
               <span>Active Cycle Highlight</span>
             </div>
           </div>
@@ -178,7 +185,7 @@
             <div class="panel-title">
               <span>🔁</span> Discovered Trade Loops
             </div>
-            <span id="cycles-count-badge" class="badge" style="color: var(--accent-cyan); border-color: rgba(6,182,212,0.3);">
+            <span id="cycles-count-badge" class="badge" style="background: var(--pop-mint);">
               0 Found
             </span>
           </div>
