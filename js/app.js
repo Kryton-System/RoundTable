@@ -682,11 +682,11 @@ function renderProposalsList() {
       const user = appState.users.find(u => u.id === uid) || { name: uid, location: { city: 'Dhaka' } };
       const userVote = prop.user_responses[uid] || 'PENDING';
 
-      let voteBadge = `<span class="badge" style="color: var(--text-dim);">⏳ Pending</span>`;
+      let voteBadge = `<span class="badge" style="background: var(--pop-canary); color: var(--ink-black);">⏳ Pending</span>`;
       if (userVote === 'ACCEPTED') {
-        voteBadge = `<span class="badge" style="color: var(--accent-emerald); border-color: rgba(16,185,129,0.3);">✔ Accepted</span>`;
+        voteBadge = `<span class="badge" style="background: var(--pop-mint); color: var(--ink-black);">✔ Accepted</span>`;
       } else if (userVote === 'REJECTED') {
-        voteBadge = `<span class="badge" style="color: var(--accent-rose); border-color: rgba(244,63,94,0.3);">✖ Rejected</span>`;
+        voteBadge = `<span class="badge" style="background: var(--pop-coral); color: var(--ink-black);">✖ Rejected</span>`;
       }
 
       const canVote = prop.status === 'PENDING' && userVote === 'PENDING';
@@ -694,12 +694,12 @@ function renderProposalsList() {
       return `
         <div class="participant-vote-row">
           <div class="participant-info">
-            <div class="user-avatar" style="background: ${user.avatar_color || '#4F46E5'}; width: 28px; height: 28px; font-size: 0.75rem;">
+            <div class="user-avatar" style="background: ${user.avatar_color || '#FFE600'}; width: 34px; height: 34px; font-size: 0.85rem;">
               ${user.name.charAt(0)}
             </div>
             <div>
-              <div style="font-weight: 600;">${user.name}</div>
-              <div style="font-size: 0.68rem; color: var(--text-dim);">${user.location.city}</div>
+              <div style="font-weight: 800; font-family: var(--font-display);">${user.name}</div>
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--ink-muted);">${user.location.city}</div>
             </div>
           </div>
           <div class="vote-actions">
@@ -719,7 +719,7 @@ function renderProposalsList() {
           <span>Proposal #${prop.id} • ${cycle.cycle_length}-Party Loop</span>
           <span>Status: ${prop.status}</span>
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
+        <div style="font-size: 0.82rem; font-weight: 700; color: var(--ink-muted); margin-bottom: 12px;">
           Participants must all accept for atomic multi-party trade execution:
         </div>
         <div class="participants-list">
@@ -749,7 +749,7 @@ function renderUsersList() {
     return `
       <div class="user-card">
         <div class="user-card-header">
-          <div class="user-avatar" style="background: ${u.avatar_color || '#4F46E5'};">
+          <div class="user-avatar" style="background: ${u.avatar_color || '#FFE600'};">
             ${u.name.charAt(0)}
           </div>
           <div>
@@ -758,10 +758,10 @@ function renderUsersList() {
           </div>
         </div>
         <div class="skill-tag-group">
-          ${offersTags || '<span style="font-size: 0.7rem; color: var(--text-dim);">No offers</span>'}
+          ${offersTags || '<span style="font-size: 0.72rem; font-weight: 700; color: var(--ink-light);">No offers</span>'}
         </div>
         <div class="skill-tag-group">
-          ${wantsTags || '<span style="font-size: 0.7rem; color: var(--text-dim);">No requests</span>'}
+          ${wantsTags || '<span style="font-size: 0.72rem; font-weight: 700; color: var(--ink-light);">No requests</span>'}
         </div>
       </div>
     `;
@@ -777,9 +777,9 @@ function renderBenchmarkResults(results) {
       <td><strong>${r.nodes}</strong> users</td>
       <td>${r.edges} edges</td>
       <td>${r.graph_build_ms} ms</td>
-      <td><span style="color: var(--accent-cyan);">${r.cycle_search_ms} ms</span></td>
+      <td><span style="font-weight: 800; color: #7000FF;">${r.cycle_search_ms} ms</span></td>
       <td><strong>${r.total_runtime_ms} ms</strong></td>
-      <td><span class="badge" style="color: var(--accent-emerald);">${r.cycles_found} loops (${r.k3_cycles} 3-way, ${r.k4_cycles} 4-way)</span></td>
+      <td><span class="badge" style="background: var(--pop-mint); color: var(--ink-black);">${r.cycles_found} loops (${r.k3_cycles} 3-way, ${r.k4_cycles} 4-way)</span></td>
     </tr>
   `).join('');
 }
