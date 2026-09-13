@@ -1,376 +1,389 @@
-# Frontend Architectural Specification & Component Scaffolding Manual
+# 🎨 FRONTEND_SCAFFOLDING.md — Frontend Architecture, UI/UX Design & Interaction Blueprint
 
-**Project Title:** The Round Table Exchange (RTE): A Multi-Party Skill Barter Network with Graph-Based Cycle Matching  
-**Document Type:** Software Engineering Technical Specification (IEEE Std 1016-2009 Aligned)  
-**Affiliation:** Department of Computer Science and Engineering, University of Information Technology and Sciences (UITS), Dhaka, Bangladesh  
-**Authors:** Ahmmad Abdali Khan (ID: `0432320005101118`), Sumaia Bintey Ismail (ID: `0432320005101103`)  
-**Supervision:** Dr. Mahfida Amjad Dipa  
+# The Round Table Exchange (RTE)
+### *A Multi-Party Skill Barter Network with Graph-Based Cycle Matching*
 
 ---
 
-## Table of Contents
-1. [Architectural Overview & Engineering Principles](#10-architectural-overview--engineering-principles)
-2. [Directory Structure & Module Organization](#20-directory-structure--module-organization)
-3. [Design System & Human-Computer Interaction (HCI) Tokens](#30-design-system--human-computer-interaction-hci-tokens)
-4. [Component Hierarchy & Layout Architecture](#40-component-hierarchy--layout-architecture)
-5. [Subsystem & Component Functional Specifications](#50-subsystem--component-functional-specifications)
-   - [5.1 Global Navigation & System Telemetry Header](#51-global-navigation--system-telemetry-header)
-   - [5.2 Real-Time Analytical Metrics Strip](#52-real-time-analytical-metrics-strip)
-   - [5.3 Topological Network & Cycle Explorer Subsystem](#53-topological-network--cycle-explorer-subsystem)
-   - [5.4 Multi-Party Trade Consensus & Confirmation Console](#54-multi-party-trade-consensus--confirmation-console)
-   - [5.5 Participant Directory & Skill Listing Module](#55-participant-directory--skill-listing-module)
-   - [5.6 Empirical Scalability & Algorithmic Benchmark Suite](#56-empirical-scalability--algorithmic-benchmark-suite)
-   - [5.7 Entity Ingestion & Parameter Configuration Dialogs](#57-entity-ingestion--parameter-configuration-dialogs)
-6. [State Management & Asynchronous Data Flow](#60-state-management--asynchronous-data-flow)
-7. [Dual-Engine Execution Strategy (Client-Server vs. In-Browser Evaluation)](#70-dual-engine-execution-strategy-client-server-vs-in-browser-evaluation)
-8. [Modular Component Migration Blueprint (React / Next.js Target)](#80-modular-component-migration-blueprint-react--nextjs-target)
+## 📑 Table of Contents
+1. [Executive Summary & Design Philosophy](#1-executive-summary--design-philosophy)
+2. [Design System & Visual Tokens](#2-design-system--visual-tokens)
+3. [Component Hierarchy & Application Scaffolding](#3-component-hierarchy--application-scaffolding)
+4. [Workspace Views & Layout Scaffolding](#4-workspace-views--layout-scaffolding)
+   - [4.1 Global Header & Live Metrics Strip](#41-global-header--live-metrics-strip)
+   - [4.2 Tab 1: Network & Cycle Explorer (Main Workspace)](#42-tab-1-network--cycle-explorer-main-workspace)
+   - [4.3 Tab 2: Group Confirmation Console](#43-tab-2-group-confirmation-console)
+   - [4.4 Tab 3: User Directory & Listing Manager](#44-tab-3-user-directory--listing-manager)
+   - [4.5 Tab 4: Empirical Scalability Benchmarks](#45-tab-4-empirical-scalability-benchmarks)
+   - [4.6 User Creation & Listing Modal](#46-user-creation--listing-modal)
+5. [User Interaction Flows & State Transitions](#5-user-interaction-flows--state-transitions)
+   - [5.1 Cycle Discovery & Inspection Flow](#51-cycle-discovery--inspection-flow)
+   - [5.2 Dynamic Ranking Parameter Tuning Flow](#52-dynamic-ranking-parameter-tuning-flow)
+   - [5.3 Multi-Party Atomic Trade Confirmation Flow](#53-multi-party-atomic-trade-confirmation-flow)
+   - [5.4 Synthetic Data Injection & Benchmarking Flow](#54-synthetic-data-injection--benchmarking-flow)
+6. [Interactive Graph Visualization Canvas (Vis.js Mechanics)](#6-interactive-graph-visualization-canvas-visjs-mechanics)
+7. [Frontend Code Structure & DOM Scaffolding](#7-frontend-code-structure--dom-scaffolding)
+8. [Dual-Engine Execution Model (FastAPI vs In-Browser Engine)](#8-dual-engine-execution-model-fastapi-vs-in-browser-engine)
+9. [Future Production Roadmap & Component Enhancements](#9-future-production-roadmap--component-enhancements)
 
 ---
 
-## 1.0 Architectural Overview & Engineering Principles
+## 1. Executive Summary & Design Philosophy
 
-The frontend architecture of **The Round Table Exchange (RTE)** is designed as an interactive Single-Page Application (SPA) providing real-time visual inspection, parameter tuning, and execution monitoring for graph-theoretic cycle detection algorithms.
+The frontend of **The Round Table Exchange (RTE)** is designed as an interactive, real-time algorithmic dashboard that bridges abstract graph-theoretic multi-party matching ($k=3, 4$ cycles) with intuitive, tactile consumer workflows.
 
-The design is governed by four core software engineering principles:
-
-1. **High-Contrast Information Architecture & Visual Ergonomics**: Adheres to strict cognitive hierarchy standards and Web Content Accessibility Guidelines (WCAG AAA), utilizing high-contrast visual tokens, distinct typographic weights (`Space Grotesk` and `JetBrains Mono`), and deterministic chromatic encoding for graph entities.
-2. **Deterministic Frame Budget & Asynchronous Rendering**: Employs an optimized Canvas-based rendering pipeline with a continuous physics simulation loop operating under a hard $16.6\text{ ms}$ per-frame budget ($60\text{ fps}$) for graphs exceeding $N \ge 100$ vertices.
-3. **Decoupled Dual-Engine Execution**: Supports transparent execution switching between remote REST API invocations (Python/FastAPI) and an in-browser deterministic graph engine (ES6+), ensuring full operational capabilities across standalone and distributed deployment environments.
-4. **Strict Modular Decoupling**: Enforces separation of concerns between topological rendering (`graph_viz.js`), application state orchestration (`app.js`), and structural presentation (`style.css`).
-
----
-
-## 2.0 Directory Structure & Module Organization
-
-```
-frontend/
-├── index.html                 # Semantic Single-Page Application shell & DOM mounting points
-├── css/
-│   └── style.css              # Centralized design system, design tokens, & responsive layout grid
-└── js/
-    ├── app.js                 # Reactive state store, REST client, in-browser engine, event hub
-    └── graph_viz.js           # Vis-Network physics engine controller & cycle highlighting pipeline
-```
-
-### 2.1 Production-Scale Modular Organization (Target Architecture)
-```
-frontend/
-├── index.html
-├── css/
-│   ├── tokens.css             # Primitive & semantic design tokens (variables, color palettes)
-│   ├── base.css               # CSS reset, typography rules, baseline element styling
-│   ├── components.css         # Atomic UI components (buttons, input fields, badges, cards)
-│   ├── layout.css             # Structural layout grids (header, 3-column explorer, tabs)
-│   └── views/
-│       ├── explorer.css       # Network viewport & ranked loop presentation
-│       ├── consensus.css      # State machine timeline & participant decision rows
-│       ├── directory.css      # User profile cards & skill classification badges
-│       └── benchmarks.css     # Runtime latency visualization & complexity tables
-└── js/
-    ├── config/
-    │   ├── constants.js       # Global constants, geographic presets, & fallback metadata
-    │   └── taxonomy.js        # Formal skill classification ontology
-    ├── core/
-    │   ├── state.js           # Centralized reactive state store with observer subscription model
-    │   └── api.js             # HTTP client handling RESTful endpoints and error boundaries
-    ├── engine/
-    │   ├── graph_builder.js   # Client-side bipartite skill matching & graph construction
-    │   ├── bounded_dfs.js     # Bounded-Depth DFS cycle search implementation (k in [3, 4])
-    │   └── ranking_model.js   # Haversine distance decay & schedule intersection scoring
-    ├── components/
-    │   ├── Navigation.js      # Global navigation & telemetry controller
-    │   ├── MetricsStrip.js    # Aggregate counter cards controller
-    │   ├── CycleCard.js       # Discovered trade cycle presentation component
-    │   ├── ConsensusRow.js    # Multi-party voting state row component
-    │   └── UserModal.js       # Profile registration dialog controller
-    └── visualization/
-        ├── GraphVisualizer.js # Vis.js Canvas integration & lifecycle controller
-        └── PhysicsProfile.js  # ForceAtlas2 continuous simulation parameters
-```
+### 🎨 Core Design Aesthetic: *Neo-Brutalist Cyber-Chic*
+- **High-Contrast Editorial Typography**: Bold, punchy headings using `Space Grotesk`, paired with monospace telemetry counters in `JetBrains Mono`.
+- **Vibrant Accent Palette**: High-voltage pop accents (`#FFE600` Canary Yellow, `#00F5D4` Electric Mint, `#FF0055` Neon Coral, `#D7B9FF` Soft Lavender) on an ink-black/cream background.
+- **Tactile Micro-Interactions**: Chunky hard borders (`2px solid #121212`), crisp drop shadows with zero blur offset, and butter-smooth transitions.
+- **Organic 60fps Network Canvas**: Living, floating particle physics graph visualizer where discovered trade loops light up dynamically in neon while irrelevant nodes dim into the background.
 
 ---
 
-## 3.0 Design System & Human-Computer Interaction (HCI) Tokens
-
-Visual styling is formalized via cascading CSS variables defining layout metrics, elevation models, and high-contrast chromatic tokens:
+## 2. Design System & Visual Tokens
 
 ```css
+/* Core Design Tokens */
 :root {
-  /* Surface & Base Chromatic Tokens */
-  --bg-primary: #FFFDF5;         /* Base Canvas Surface (ISO 12647 compliant) */
-  --bg-dark: #121212;            /* High-Contrast Foreground & Border Tone */
-  --bg-surface-elevated: #FFFFFF;/* Card Surface Base */
-  --border-primary: 2.5px solid #121212;
-  --border-secondary: 1px solid rgba(18, 18, 18, 0.12);
+  /* Surfaces & Backgrounds */
+  --bg-canvas: #FFFDF5;            /* Warm Off-White / Cream Base */
+  --bg-dark: #121212;              /* Deep Ink Black */
+  --bg-card: #FFFFFF;              /* Pure White Card Surface */
+  --bg-card-alt: #F4EFE6;          /* Muted Secondary Surface */
 
-  /* Categorical Graph & State Encodings */
-  --accent-primary: #FFE600;     /* System Focus & Interactive Highlights */
-  --state-confirmed: #00F5D4;    /* Verified Consensus / Valid Cycle Subgraph */
-  --state-active-path: #FF0055;  /* Directed Cycle Path Illuminator */
-  --category-quad: #D7B9FF;      /* 4-Party Cycle Metric (k = 4) */
-  --state-pending: #FF9E00;      /* In-Flight Consensus / Awaiting User Action */
-  --state-rejected: #F43F5E;     /* Vetoed Transaction State */
+  /* Neo-Brutalist Borders & Shadows */
+  --border-hard: 2px solid #121212;
+  --border-thick: 3px solid #121212;
+  --shadow-flat: 4px 4px 0px #121212;
+  --shadow-flat-sm: 2px 2px 0px #121212;
+  --shadow-flat-hover: 6px 6px 0px #121212;
 
-  /* Typographic Hierarchy */
-  --font-family-display: 'Space Grotesk', -apple-system, sans-serif;
-  --font-family-mono: 'JetBrains Mono', monospace;
+  /* High-Voltage Accent Palette */
+  --accent-yellow: #FFE600;        /* Primary Attention / Highlight */
+  --accent-mint: #00F5D4;          /* Success / Active Loop Illuminate */
+  --accent-coral: #FF0055;         /* Active Trade Path / Urgent Action */
+  --accent-purple: #D7B9FF;        /* 4-Party Loop Tag */
+  --accent-cyan: #00BBF9;          /* Informational / Secondary Tag */
+  --accent-orange: #FF9E00;        /* Pending State Badge */
 
-  /* Elevation & Tactile Tokens */
-  --elevation-low: 3px 3px 0px #121212;
-  --elevation-mid: 5px 5px 0px #121212;
-  --elevation-high: 8px 8px 0px #121212;
-  --radius-sharp: 4px;
-  --radius-container: 10px;
+  /* Typography */
+  --font-display: 'Space Grotesk', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'Space Grotesk', -apple-system, sans-serif;
 }
 ```
 
 ---
 
-## 4.0 Component Hierarchy & Layout Architecture
+## 3. Component Hierarchy & Application Scaffolding
+
+```
+<AppRoot>
+├── <AppHeader>
+│   ├── <BrandIdentity> (Logo + Title + Subtitle)
+│   ├── <NavigationTabs> (4 Tab Buttons)
+│   ├── <EngineStatusBadge> (Live DFS status indicator)
+│   └── <ResetDemoButton> (Quick reset to canonical demo graph)
+├── <MetricsStrip>
+│   ├── <MetricCard: Total Users>
+│   ├── <MetricCard: Discovered Cycles>
+│   ├── <MetricCard: 3-Party Loops (k=3)>
+│   ├── <MetricCard: 4-Party Loops (k=4)>
+│   └── <MetricCard: Active Proposals>
+├── <MainWorkspacesContainer>
+│   ├── <Tab1: ExplorerWorkspace>
+│   │   ├── <AlgorithmControlsPanel> (Alpha slider, min/max k, inject buttons)
+│   │   ├── <GraphCanvasSection> (Vis.js interactive physics canvas + controls + legend)
+│   │   └── <DiscoveredCyclesSidebar> (Ranked cycle cards + inspect/initiate actions)
+│   ├── <Tab2: ProposalsWorkspace>
+│   │   └── <ProposalsListContainer> (Multi-party state machine proposal cards + voting controls)
+│   ├── <Tab3: UsersWorkspace>
+│   │   ├── <UsersHeaderSection> (Filter + "Add User" trigger)
+│   │   └── <UserCardsGrid> (Profile cards, skill tags, schedule chips)
+│   └── <Tab4: BenchmarksWorkspace>
+│       ├── <BenchmarkHeader> (Empirical complexity explanation)
+│       ├── <RunBenchmarkButton>
+│       └── <BenchmarkResultsTable> (Nodes vs Latency telemetry)
+└── <CreateUserModal>
+    └── <UserRegistrationForm> (Name, Dhaka location, offers, wants, schedule)
+```
+
+---
+
+## 4. Workspace Views & Layout Scaffolding
+
+### 4.1 Global Header & Live Metrics Strip
+Located at the top of the interface across all views.
+
+```
++---------------------------------------------------------------------------------------------------------+
+| [🔄] The Round Table Exchange (RTE)   [🌐 Network Explorer] [🤝 Confirmations] [👥 Users] [⚡ Benchmarks]  [● DFS Active] [🔄 Reset] |
++---------------------------------------------------------------------------------------------------------+
+| TOTAL USERS: 7  |  DISCOVERED CYCLES: 2  |  3-PARTY LOOPS: 1  |  4-PARTY LOOPS: 1  |  ACTIVE PROPOSALS: 0   |
++---------------------------------------------------------------------------------------------------------+
+```
+
+- **Brand Header**: Fixed sticky bar (`height: 68px`) with high z-index.
+- **Nav Tabs**: Pill-shaped tactile toggle buttons with immediate active indicator feedback.
+- **Metrics Strip**: 5-column responsive grid displaying real-time counters formatted in bold monospace digits.
+
+---
+
+### 4.2 Tab 1: Network & Cycle Explorer (Main Workspace)
+A 3-column asymmetric layout designed for high-density algorithmic exploration:
+
+```
++-------------------+----------------------------------------------------+--------------------------+
+| ⚙️ ALGORITHM CTRL  | 🌐 INTERACTIVE NETWORK CANVAS                      | 🔁 DISCOVERED CYCLES     |
++-------------------+----------------------------------------------------+--------------------------+
+| Ranking Alpha (α) | [🎯 Center View]  [✨ Reset Highlights]            | 2 Found                  |
+| [===●===========] |                                                    +--------------------------+
+| 0.50 (Balanced)   |          (User A) -----[Python]-----> (User B)      | [3-Party Loop]  [92.4%]  |
+|                   |             ^                             |        | Alice ➔ Bob ➔ Charlie ➔  |
+| Min/Max Loop (k): |             |                             |        | 📍 2.8 km  •  ⏰ 4.5h/wk  |
+| [ 3 ] to [ 4 ]    |         [Spanish]                     [Guitar]     | [🔍 Inspect] [🤝 Propose]|
+|                   |             |                             |        +--------------------------+
+| [🚀 Run Match]    |             +------- (User C) <-----------+        | [4-Party Loop]  [84.1%]  |
+|                   |                                                    | Nafisa ➔ Zubair ➔ Anika..|
+| Synthetic Inject: |                                                    | 📍 4.1 km  •  ⏰ 3.0h/wk  |
+| [+20]  [+50 Users]|  Legend: (● User Node) (-- Trade Link) (● Highlight)| [🔍 Inspect] [🤝 Propose]|
+|                   |                                                    |                          |
+| [➕ Add User]     |                                                    |                          |
++-------------------+----------------------------------------------------+--------------------------+
+```
+
+#### Left Column: Algorithm Controls Panel (`320px` width)
+1. **$\alpha$ Ranking Weight Slider**: Interactively balances between Geographic Proximity ($\alpha=1.0$) and Schedule Overlap ($\alpha=0.0$).
+2. **Cycle Length Bounds**: Dropdown selectors for $k_{\min}$ ($2$ or $3$) and $k_{\max}$ ($3$ or $4$).
+3. **Execution Button**: High-visibility action button (`🚀 Run Cycle Matching Engine`) triggering graph rebuild & DFS traversal.
+4. **Quick-Inject Buttons**: Single-click population injectors (`+20 Users`, `+50 Users`) for instant stress-testing.
+
+#### Center Column: Interactive Graph Canvas (Fluid Width, min `600px` height)
+1. **ForceAtlas2 Live Simulation**: Living organic physics graph with automatic node repulsion and edge attraction.
+2. **Floating Viewport Controls**: `Center View` and `Reset Highlights` overlay buttons on top-left.
+3. **Legend Overlay**: Explanatory color pins on bottom-left.
+
+#### Right Column: Discovered Cycles Sidebar (`380px` width)
+1. **Cycle Cards**: Vertically scrolling list of all closed loops found by the engine.
+2. **Header Badges**: Tags distinguishing `3-Party Loop` (Indigo) from `4-Party Loop` (Purple), alongside composite match quality percentage score.
+3. **Directed Trade Chain**: Step-by-step display of each member and the skill they transfer to their peer.
+4. **Physical Telemetry**: Displays average geographic proximity in kilometers and weekly shared available hours.
+5. **Card Action Triggers**:
+   - **`🔍 Inspect in Graph`**: Isolates the loop in glowing neon in the canvas.
+   - **`🤝 Initiate Proposal`**: Dispatches the trade proposal into the group confirmation state machine.
+
+---
+
+### 4.3 Tab 2: Group Confirmation Console
+A focused interface for managing atomic multi-user trade proposals.
+
+```
++-------------------------------------------------------------------------------------------------+
+| 🤝 MULTI-PARTY TRADE CONFIRMATION STATE MACHINE                                                 |
++-------------------------------------------------------------------------------------------------+
+| All participants in a discovered loop must accept for atomic trade confirmation.               |
+|                                                                                                 |
+| +---------------------------------------------------------------------------------------------+ |
+| | PROPOSAL #a3f92b • 3-Party Loop (Python ➔ Guitar ➔ Spanish)          STATUS: ⏳ PENDING      | |
+| +---------------------------------------------------------------------------------------------+ |
+| | (Ahmmad Khan)   📍 Badda        Status: ✔ Accepted                                          | |
+| | (Sumaia Ismail) 📍 Gulshan-2    Status: ⏳ Pending        [ ✔ Accept ]     [ ✖ Reject ]     | |
+| | (Tanvir Ahmed)  📍 Banani       Status: ⏳ Pending        [ ✔ Accept ]     [ ✖ Reject ]     | |
+| +---------------------------------------------------------------------------------------------+ |
++-------------------------------------------------------------------------------------------------+
+```
+
+- **Status Banners**: Color-coded banners reflecting proposal state (`PENDING` in Orange, `CONFIRMED` in Emerald Green, `REJECTED` in Coral Pink, `EXPIRED` in Gray).
+- **Simulated Multi-User Voting Console**: Evaluator can click **`Accept`** or **`Reject`** as each participant to watch atomic state transitions live.
+
+---
+
+### 4.4 Tab 3: User Directory & Listing Manager
+A card grid showcasing all active users, their neighborhood locations, weekly availability, and skills.
+
+```
++-------------------------------------------------------------------------------------------------+
+| REGISTERED USERS & SKILL LISTINGS                                       [ ➕ Add New User ]      |
++-------------------------------------------------------------------------------------------------+
+| +-----------------------------+  +-----------------------------+  +---------------------------+ |
+| | (A) Ahmmad Khan             |  | (S) Sumaia Ismail           |  | (T) Tanvir Ahmed          | |
+| | 📍 Badda • ⏰ M/W/F (18-21) |  | 📍 Gulshan • ⏰ M/W/F (18-22)|  | 📍 Banani • ⏰ W/F/S(17-21) | |
+| | [Teaches: Python]           |  | [Teaches: Acoustic Guitar]  |  | [Teaches: Spanish]        | |
+| | [Wants: Acoustic Guitar]    |  | [Wants: Spanish]            |  | [Wants: Python]           | |
+| +-----------------------------+  +-----------------------------+  +---------------------------+ |
++-------------------------------------------------------------------------------------------------+
+```
+
+---
+
+### 4.5 Tab 4: Empirical Scalability Benchmarks
+A telemetry table benchmarking graph construction and Bounded DFS cycle discovery across varying network densities.
+
+```
++-------------------------------------------------------------------------------------------------+
+| ⚡ EMPIRICAL SCALABILITY & COMPLEXITY BENCHMARKS (O(n · m^(k-1)))                                 |
+| [ ▶ Run Scalability Benchmark (20 - 500 Nodes) ]                                                |
++-------------------------------------------------------------------------------------------------+
+| GRAPH SIZE  | EDGE DENSITY | GRAPH BUILD TIME | CYCLE SEARCH (DFS) | TOTAL LATENCY | LOOPS FOUND |
+| 20 users    | 60 edges     | 0.39 ms          | 1.20 ms            | 1.59 ms       | 26 loops    |
+| 50 users    | 534 edges    | 2.25 ms          | 45.10 ms           | 47.35 ms      | 100 loops   |
+| 100 users   | 1,280 edges  | 5.10 ms          | 82.40 ms           | 87.50 ms      | 100 loops   |
++-------------------------------------------------------------------------------------------------+
+```
+
+---
+
+### 4.6 User Creation & Listing Modal
+A clean modal overlay with backdrop blur:
+- **Full Name**: Text input.
+- **Location (Dhaka Area)**: Preset dropdown (Dhanmondi, Gulshan-2, Banani, Uttara, Mirpur, Mohammadpur, Bashundhara, Badda).
+- **Skill Offered**: Skill the user wants to teach.
+- **Skill Wanted**: Skill the user wants to learn.
+- **Actions**: `Cancel` (dismiss modal) and `Create Profile` (submits and refreshes graph).
+
+---
+
+## 5. User Interaction Flows & State Transitions
+
+### 5.1 Cycle Discovery & Inspection Flow
 
 ```mermaid
-graph TD
-    Root[Application Root: index.html] --> Header[Header & System Telemetry Subsystem]
-    Root --> Metrics[Aggregate Real-Time Metrics Strip]
-    Root --> Workspace[Tabbed Workspace Controller]
-    Root --> Dialogs[Modal & Ingestion Dialog Manager]
+sequenceDiagram
+    autonumber
+    actor User as Tester / Evaluator
+    participant UI as Frontend Dashboard
+    participant Canvas as Vis.js Network
+    participant Engine as Matching Engine (FastAPI / In-Browser)
 
-    Header --> TelemetryBadge[Engine Status Indicator]
-    Header --> TabNav[Primary Navigation Tab Bar]
-    Header --> ResetAction[System State Reset Handler]
-
-    Metrics --> MetricUsers[Total Registered Users: N]
-    Metrics --> MetricCycles[Discovered Cycles: |C|]
-    Metrics --> MetricK3[Triangular Cycles: k=3]
-    Metrics --> MetricK4[Quad Cycles: k=4]
-    Metrics --> MetricProposals[Active Consensus Proposals]
-
-    Workspace --> ViewExplorer[View 1: Network & Cycle Explorer]
-    Workspace --> ViewConsensus[View 2: Multi-Party Consensus Console]
-    Workspace --> ViewDirectory[View 3: Participant & Listing Directory]
-    Workspace --> ViewBenchmarks[View 4: Scalability & Complexity Benchmarks]
-
-    ViewExplorer --> AlgControls[Algorithm Parameter Control Panel]
-    ViewExplorer --> CanvasContainer[Interactive Graph Canvas Container]
-    ViewExplorer --> CycleDeck[Ranked Trade Cycle Deck]
-
-    AlgControls --> SliderAlpha[Alpha Weight Slider: alpha in 0.0 .. 1.0]
-    AlgControls --> BoundsSelect[Cycle Bounds Selector: min_k, max_k]
-    AlgControls --> TriggerRun[Algorithm Execution Trigger]
-    AlgControls --> SeedInjector[Synthetic Dataset Injection Controls]
-
-    CanvasContainer --> PhysicsViewport[Vis-Network Physics Viewport]
-    CanvasContainer --> CanvasOverlay[Canvas Coordinate & Highlight Controls]
-    CanvasContainer --> TopologicalLegend[Topological Entity Color Legend]
-
-    CycleDeck --> RankedCards[Ranked Cycle Presentation Cards]
-    RankedCards --> StepSequence[Directed Step Sequence v1 -> v2 -> ... -> vk]
-    RankedCards --> MetricBadges[Mean Haversine Distance & Schedule Overlap]
-    RankedCards --> InspectAction[Sub-Graph Highlighting Trigger]
-    RankedCards --> ProposeAction[Consensus Proposal Dispatcher]
-
-    ViewConsensus --> ConsensusCards[Consensus State Cards]
-    ConsensusCards --> ParticipantVoteMatrix[Participant Response Matrix]
-
-    ViewDirectory --> UserGrid[Participant Profile Grid]
-    UserGrid --> SkillBadges[Supply / Demand Skill Classification Badges]
-
-    ViewBenchmarks --> BenchmarkRunner[Scalability Benchmark Launcher]
-    ViewBenchmarks --> BenchmarkTable[Empirical Latency & Complexity Matrix]
-
-    Dialogs --> UserModal[User Profile & Listing Creation Dialog]
+    User->>UI: Adjusts α slider (e.g. 0.60) & clicks "Run Cycle Matching"
+    UI->>Engine: POST /api/match/run { alpha: 0.60, min_k: 3, max_k: 4 }
+    Engine-->>UI: Returns Discovered Cycles + Graph Nodes/Edges
+    UI->>Canvas: Updates nodes & edges; starts ForceAtlas2 physics
+    UI->>UI: Renders Ranked Cycle Cards in Sidebar
+    
+    User->>UI: Clicks "🔍 Inspect in Graph" on Cycle #1
+    UI->>Canvas: Calls highlightCycle(userIds, cycleEdges)
+    Canvas-->>Canvas: Enlarges cycle nodes (cyan/mint) & illuminates cycle edges (hot coral)
+    Canvas-->>Canvas: Dims all unselected nodes & edges to 18% opacity
 ```
 
 ---
 
-## 5.0 Subsystem & Component Functional Specifications
-
-### 5.1 Global Navigation & System Telemetry Header
-- **Functionality**: Provides persistent application status monitoring, view routing, and system state re-initialization.
-- **Components**:
-  - `Brand Identifier`: Visual badge denoting institutional affiliation (*UITS CSE*).
-  - `Tab Navigator`: Accessible ARIA tablist managing state transitions across the 4 primary operational views.
-  - `Engine Status Pulse`: Chromatic telemetry element indicating algorithm operational readiness.
-  - `Dataset Reset Trigger`: Reverts active memory state to the canonical 7-node verification dataset.
-
-### 5.2 Real-Time Analytical Metrics Strip
-- **Functionality**: Displays synchronized scalar aggregations computed over the active graph topology and consensus state.
-- **Monitored Variables**:
-  - $|V|$: Total active participant count.
-  - $|C|$: Cardinality of discovered cycle set.
-  - $|C_{k=3}|$: Triangular cycle subtotal.
-  - $|C_{k=4}|$: Quad cycle subtotal.
-  - $|P_{\text{pending}}|$: Active multi-party consensus instances.
-
-### 5.3 Topological Network & Cycle Explorer Subsystem
-The primary analytical environment configured as an asymmetric 3-column grid layout:
-
-```
-+---------------------+------------------------------------------+---------------------+
-| Algorithm Controls  | Interactive Network Visualization Canvas | Ranked Cycle Deck   |
-| (Width: 320px)      | (Flexible Viewport: 1fr)                 | (Width: 380px)      |
-|                     |                                          |                     |
-| - Alpha Weight      | - 60 FPS ForceAtlas2 Physics Simulation  | - Composite Scores  |
-| - Bounds [min_k,    | - Directed Arc Compatibility Rendering   | - Haversine Means   |
-|   max_k]            | - Isolated Subgraph Path Highlighting    | - Overlap Hours     |
-| - Execution Trigger | - Zoom / Pan Coordinate Controls         | - Path Inspection   |
-| - Synthetic Seeder  | - Chromatic Entity Legend                | - Trade Dispatch    |
-+---------------------+------------------------------------------+---------------------+
-```
-
-#### 5.3.1 Graph Visualization Engine (`graph_viz.js`)
-- **Underlying Technology**: Vis-Network HTML5 Canvas rendering engine.
-- **Physics Formulation**: ForceAtlas2 continuous force-directed model.
-  - Gravitational constant: $G = -26$ (repulsive force between vertices).
-  - Central gravity: $\gamma = 0.006$ (restorative pull toward viewport origin).
-  - Spring constant: $k_s = 0.035$; Spring equilibrium length: $L_0 = 125\text{ px}$.
-  - Damping factor: $\mu = 0.86$ (prevents oscillation, ensuring smooth visual convergence).
-  - Velocity constraints: $v_{\max} = 8.0$, $v_{\min} = 0.04$.
-- **Path Isolation Algorithm (`highlightCycle`)**:
-  - Non-participating vertices: Dimmed to opacity $\tau = 0.18$, diameter reduced to $d = 15\text{ px}$.
-  - Participating vertices: Opacity $\tau = 1.0$, diameter enlarged to $d = 28\text{ px}$, fill color `--state-confirmed` (`#00F5D4`).
-  - Participating directed edges: Width enlarged to $w = 4.0\text{ px}$, stroke color `--state-active-path` (`#FF0055`), with active skill labels rendered in yellow background bounding boxes.
-
-### 5.4 Multi-Party Trade Consensus & Confirmation Console
-- **Formal Consensus State Model**: Implements an atomic multi-agent consensus automaton $M = \langle S, \Sigma, \delta, s_0, F \rangle$:
-  - $S = \{\text{PENDING}, \text{CONFIRMED}, \text{REJECTED}, \text{EXPIRED}\}$.
-  - $\Sigma = \{\text{accept}_u, \text{reject}_u, \text{timeout} \mid u \in V_C\}$.
-  - State Transition Function:
-    $$\delta(\text{PENDING}, \text{accept}_u) = \begin{cases} \text{CONFIRMED} & \text{if } \forall v \in V_C, \text{response}(v) = \text{ACCEPTED} \\ \text{PENDING} & \text{otherwise} \end{cases}$$
-    $$\delta(\text{PENDING}, \text{reject}_u) = \text{REJECTED} \quad (\text{Single Veto Rule})$$
-    $$\delta(\text{PENDING}, \text{timeout}) = \text{EXPIRED}$$
-- **Interface Presentation**: Renders participant cards displaying profile attributes, geographic location, current decision badge, and deterministic Accept/Reject action buttons.
-
-### 5.5 Participant Directory & Skill Listing Module
-- **Functionality**: Multi-column responsive catalog of registered participants.
-- **Presentation Matrix**: Displays participant identity, geographic quadrant, availability time windows, offered skill taxonomies (`OFFER`), and requested skill taxonomies (`WANT`).
-
-### 5.6 Empirical Scalability & Algorithmic Benchmark Suite
-- **Functionality**: Interactive benchmarking module measuring empirical execution latencies and edge densities across parameterized synthetic populations ($N \in [20, 50, 100, 250, 500]$).
-- **Tabular Data Metrics**:
-  - $|V|$: Node population count.
-  - $|E|$: Directed compatibility edge count.
-  - $t_{\text{build}}$: Bipartite graph construction latency ($\text{ms}$).
-  - $t_{\text{dfs}}$: Bounded DFS cycle search latency ($\text{ms}$).
-  - $t_{\text{total}}$: End-to-end processing latency ($\text{ms}$).
-  - Yield: Cardinality of identified 3-way and 4-way cycles.
-
-### 5.7 Entity Ingestion & Parameter Configuration Dialogs
-- **Form Controls**: Modal interface supporting dynamic participant creation with validation for Name, Geographic Location (Dhaka zone dropdown), Skill Offer, and Skill Demand.
-
----
-
-## 6.0 State Management & Asynchronous Data Flow
-
-The global application state is modeled as a centralized reactive data store (`appState` in `app.js`):
-
-```typescript
-interface ApplicationState {
-  users: User[];
-  metadata: {
-    skills: Record<string, string>; // Skill name -> Ontology category
-    locations: string[];            // Pre-configured geographic zones
-  };
-  discoveredCycles: TradeCycle[];   // Active cycle result set
-  proposals: TradeProposal[];       // Consensus instance collection
-  selectedCycleId: string | null;   // Active cycle under inspection
-  activeTab: string;                // Current navigation route
-  alpha: number;                    // Ranking weight coefficient [0.0, 1.0]
-  minK: number;                     // Minimum cycle length (default: 3)
-  maxK: number;                     // Maximum cycle length (default: 4)
-}
-```
-
-### Lifecycle Execution Sequence
-```
-[User Parameter Mutation / Seeding Trigger]
-                     │
-                     ▼
-           [runMatching() Invoked]
-                     │
-         ┌───────────┴───────────┐
-         ▼                       ▼
-   [API Mode Active]    [Standalone Fallback Active]
-   FastAPI Endpoint      Client Bounded-DFS Engine
-   POST /api/match/run   (Pure ES6 Implementation)
-         │                       │
-         └───────────┬───────────┘
-                     ▼
-        [Cycles & Graph Payload Received]
-                     │
-         ┌───────────┴───────────┐
-         ▼                       ▼
- [graphVisualizer.setData()]  [Reactive DOM Render Cycle]
- Stabilize ForceAtlas2 Canvas - renderMetrics()
-                              - renderCyclesList()
-                              - renderProposalsList()
-                              - renderUsersList()
-```
-
----
-
-## 7.0 Dual-Engine Execution Strategy (Client-Server vs. In-Browser Evaluation)
-
-To ensure zero-downtime availability across both distributed backend servers and static demonstration environments (e.g., GitHub Pages), the frontend implements an automatic environment detection and execution fallback mechanism:
+### 5.2 Dynamic Ranking Parameter Tuning Flow
 
 ```mermaid
 flowchart TD
-    Init[Application Initialization: DOMContentLoaded] --> Probe[Probe REST Gateway: GET /api/meta]
-    
-    Probe -->|HTTP 200 OK| RemoteMode[Mode: Distributed Client-Server API]
-    Probe -->|HTTP Error / Network Timeout| StandaloneMode[Mode: Standalone In-Browser Evaluation]
-
-    RemoteMode --> RestGateway[Route Requests via FastAPI Gateway]
-    RestGateway --> BackendPython[Execute Bounded DFS in Python / NetworkX]
-    BackendPython --> RemoteResponse[Return JSON Payload]
-
-    StandaloneMode --> LocalEngine[Execute In-Browser Graph Builder]
-    LocalEngine --> LocalDFS[Execute Bounded DFS in Client ES6 Engine]
-    LocalDFS --> LocalResponse[Return Synchronized Data Structures]
-
-    RemoteResponse --> RenderView[Unified Canvas & DOM Rendering Pipeline]
-    LocalResponse --> RenderView
+    A[User drags Ranking Weight Slider α] --> B{α value}
+    B -->|α = 1.0| C[Location Proximity Only: Closer neighbors ranked highest]
+    B -->|α = 0.0| D[Schedule Overlap Only: Most shared hours ranked highest]
+    B -->|α = 0.5| E[Balanced Composite: 50% Geographic + 50% Schedule]
+    C --> F[Click 'Run Cycle Matching Engine']
+    D --> F
+    E --> F
+    F --> G[Engine recalculates scores and re-sorts Cycle Cards dynamically]
 ```
 
 ---
 
-## 8.0 Modular Component Migration Blueprint (React / Next.js Target)
+### 5.3 Multi-Party Atomic Trade Confirmation Flow
 
-For subsequent migration into modern declarative component frameworks (e.g., React 19 / Next.js App Router with TypeScript), the application structure maps directly to the following modular component hierarchy:
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Alice as Participant 1
+    actor Bob as Participant 2
+    actor Charlie as Participant 3
+    participant StateMachine as Group Confirmation State Machine
+    participant UI as Confirmation Console
+
+    Note over StateMachine: Proposal Created (State: PENDING)
+    Alice->>StateMachine: Vote: ACCEPT
+    StateMachine->>UI: Update Status: Alice Accepted (Proposal remains PENDING)
+    
+    Bob->>StateMachine: Vote: ACCEPT
+    StateMachine->>UI: Update Status: Bob Accepted (Proposal remains PENDING)
+    
+    alt Charlie Accepts
+        Charlie->>StateMachine: Vote: ACCEPT
+        StateMachine->>UI: All 3 Accepted! State transitions to CONFIRMED (Green Banner)
+    else Charlie Rejects
+        Charlie->>StateMachine: Vote: REJECT
+        StateMachine->>UI: Single Veto! State transitions to REJECTED (Red Banner)
+    end
+```
+
+---
+
+## 6. Interactive Graph Visualization Canvas (Vis.js Mechanics)
+
+The visual graph canvas in `frontend/js/graph_viz.js` is tuned for **buttery 60fps performance and organic floating drift**:
+
+| Parameter | Configuration | Visual Impact |
+|---|---|---|
+| **Physics Solver** | `forceAtlas2Based` | Continuous organic graph layout |
+| **Gravitational Constant** | `-26` | Gentle node repulsion preventing clutter |
+| **Spring Length** | `125` | Natural edge spacing between users |
+| **Damping** | `0.86` | Slow-motion graceful drift without erratic jitter |
+| **Max Velocity** | `8.0` | Prevents sudden snaps or violent physics explosions |
+| **Smooth Curve Type** | `continuous` | Silky curved cubic bezier trade arrows |
+| **Shadows** | `false` | Canvas shadows disabled for zero-lag 60fps rendering |
+
+### Dynamic Highlighting Algorithm
+When `highlightCycle(cycleUserIds, cycleEdges)` is triggered:
+1. **Participating Nodes**: Scaled up to radius `28px`, colored `#00F5D4` (Electric Mint), font set to bold `#121212`.
+2. **Non-Participating Nodes**: Scaled down to `15px`, dimmed to `18%` opacity with muted gray border.
+3. **Cycle Edges**: Width boosted to `4.0px`, colored `#FF0055` (Neon Coral), skill transfer text illuminated in bold yellow badges (`#FFE600`).
+4. **Non-Cycle Edges**: Width reduced to `0.8px`, opacity dimmed to `10%`.
+
+---
+
+## 7. Frontend Code Structure & DOM Scaffolding
 
 ```
-src/
-├── app/
-│   ├── layout.tsx             # Root layout, metadata, & global CSS token injection
-│   └── page.tsx               # Primary dashboard page orchestrating tabbed views
-├── components/
-│   ├── layout/
-│   │   ├── NavigationHeader.tsx
-│   │   ├── MetricsStrip.tsx
-│   │   └── TabController.tsx
-│   ├── explorer/
-│   │   ├── AlgorithmControlPanel.tsx
-│   │   ├── NetworkViewport.tsx # Forward-ref wrapped Canvas / Vis-Network container
-│   │   ├── RankedCycleDeck.tsx
-│   │   └── CycleCard.tsx
-│   ├── consensus/
-│   │   ├── ConsensusConsole.tsx
-│   │   ├── ProposalCard.tsx
-│   │   └── ParticipantDecisionRow.tsx
-│   ├── directory/
-│   │   ├── ParticipantGrid.tsx
-│   │   └── ParticipantCard.tsx
-│   ├── benchmarks/
-│   │   ├── BenchmarkDashboard.tsx
-│   │   └── BenchmarkResultsTable.tsx
-│   └── dialogs/
-│       └── UserIngestionModal.tsx
-├── hooks/
-│   ├── useMatchingEngine.ts    # Manages API queries and in-browser DFS fallback
-│   ├── useGraphVisualizer.ts   # Manages Canvas lifecycle, physics, & path illumination
-│   └── useConsensusWorkflow.ts # Manages atomic consensus state transitions
-└── types/
-    ├── user.ts                 # TypeScript interfaces for User, Location, Schedule
-    ├── cycle.ts                # TypeScript interfaces for TradeCycle, CycleEdge
-    └── proposal.ts             # TypeScript interfaces for TradeProposal, ConsensusStatus
+frontend/
+├── index.html                 # Semantic Single-Page Dashboard layout
+├── css/
+│   └── style.css              # Neo-Brutalist design system & responsive styling
+└── js/
+    ├── app.js                 # UI State manager, REST client & In-Browser engine fallback
+    └── graph_viz.js           # Vis.js physics controller & cycle illumination engine
 ```
+
+### Key DOM Element IDs & Data Attributes
+- `#alpha-slider`, `#alpha-val`: Ranking balance controls.
+- `#min-k-select`, `#max-k-select`: Loop depth selectors.
+- `#btn-run-match`: Main engine execution trigger.
+- `#network-canvas`: Target DOM container for Vis.js canvas.
+- `#cycles-list`: Sidebar container where cycle cards are dynamically injected.
+- `#proposals-list`: Workspace container for confirmation state machine proposals.
+- `#users-cards-grid`: Card grid container for registered profiles.
+- `#benchmark-tbody`: Telemetry table body for scalability benchmarking.
+- `#modal-create-user`: Registration modal dialog.
+
+---
+
+## 8. Dual-Engine Execution Model (FastAPI vs In-Browser Engine)
+
+To enable zero-hassle deployment on GitHub Pages without requiring a hosted server, the frontend employs an **Automatic Dual-Engine Architecture**:
+
+```mermaid
+flowchart TD
+    Init[App Initializes on Page Load] --> CheckAPI{Attempt GET /api/meta}
+    CheckAPI -->|Response 200 OK| APIMode[API Mode: Live FastAPI Backend Connected]
+    CheckAPI -->|Network Error / 404 / GitHub Pages| StandaloneMode[Standalone In-Browser Engine Activated]
+    
+    APIMode --> AsyncFetch[UI triggers fetch requests to Python REST API]
+    StandaloneMode --> ClientEngine[app.js runs buildClientGraph & findClientCycles directly in JS]
+```
+
+- **Feature Parity**: The standalone client engine supports the exact same Bounded DFS cycle detection ($k=3, 4$), ranking equations, group confirmation state machine, synthetic user injection, and benchmark suite as the Python backend.
+
+---
+
+## 9. Future Production Roadmap & Component Enhancements
+
+For subsequent iterations beyond the semester MVP:
+1. **React / Next.js Component Migration**: Modular componentization using Tailwind CSS or styled-components.
+2. **Interactive Map View (Leaflet / Mapbox)**: Toggle between the force-directed abstract graph and a real Dhaka street map showing geodesic trade vectors.
+3. **WebSocket Real-Time Notifications**: Live proposal alerts pushed to connected participant clients when a cycle is matched.
+4. **Calendar Conflict Integration**: Visual timeline picker for drag-and-drop availability coordination.
